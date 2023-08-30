@@ -1,0 +1,252 @@
+/* https://www.joshwcomeau.com/css/custom-css-reset/ */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+* {
+	margin: 0;
+}
+
+body {
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+	display: block;
+	max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+	font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	overflow-wrap: break-word;
+}
+
+
+/* meow */
+
+body {
+	background: #636;
+	color: #fff;
+	font-family: "Trebuchet MS", Verdana, sans-serif;
+}
+
+.messages {
+
+	background: #222;
+	border: #7cc 2px solid;
+	border-radius: 4px;
+
+	padding: 0.5rem 1rem;
+	margin: 0rem auto;
+
+	width: 80%;
+	max-width: 32rem;
+	min-width: 12rem;
+
+}
+.messages-item {
+	list-style: none;
+
+	border: #333 2px dashed;
+	border-radius: 5px;
+
+	text-align: center;
+
+	width: 60%;
+	min-width: 10rem;
+	margin: 0 auto;
+	padding: 0 0.5rem;
+}
+
+.wrapper {
+	background: #222;
+	
+	width: min(60rem, max(80vw, 30rem), 100% - 1rem);
+	max-width: 60rem;
+	min-height: 100vh;
+	
+	margin: 0 auto;
+	padding: 3rem 2rem;
+}
+.app {
+	display: grid;
+	grid-template-columns: 1fr 4fr;
+
+	width: 100%;
+}
+
+
+
+
+.sidebar {
+	grid-column: 1 / 2;
+
+	padding: 0.25rem;
+
+	overflow: hidden;
+}
+
+.sidebar-top {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 2rem;
+}
+.sidebar-bottom {
+	display: flex;
+	flex-direction: column;
+}
+.sidebar-button {
+
+}
+
+.button {
+	background: #000;
+	border: none;
+	border-radius: 12px;
+	color: white;
+
+	text-align: center;
+	text-decoration: none;
+
+	margin: 0.25rem;
+	padding: 0.25rem;
+
+	cursor: pointer;
+}
+.button:active,
+.button:hover {
+	background: #334;
+	color: #77f;
+}
+
+
+.content {
+	grid-column: 2 / 3;
+
+	padding: 2rem;
+	width: 100%;
+
+	overflow: hidden;
+}
+
+.content h2 {
+	margin-bottom: 1rem;
+}
+.content .send {
+	display: grid;
+	grid-template-rows: 1fr min-content;
+
+	/* border: #e5e 2px solid; */
+	border-radius: 4px;
+
+	padding: 1rem;
+
+}
+.send .send-body {
+	grid-row: 1 / 2;
+
+	background: #222;
+	border: #555 1px solid;
+	border-radius: 4px;
+	color: inherit;
+
+	padding: 1rem;
+	width: 100%;
+	height: 8rem;
+
+	resize: none;
+}
+.send-options {
+	grid-row: 2 / 3;
+}
+.send .send-submit {
+	width: 10rem;
+	margin: 0.5rem;
+}
+.send-perms {
+	width: 8rem;
+	height: 2rem;
+}
+
+
+.post {
+	background: #111;
+	border: #c8b 2px solid;
+	border-radius: 4px;
+
+	padding: 0.5rem;
+	margin: 1rem 0.5rem;
+
+}
+
+.post-heading {
+	display: flex;
+	flex-wrap: wrap-reverse;
+	justify-content: end;
+
+	gap: 0.5rem;
+	padding: 0.1rem;
+}
+.post-heading-perms {
+	flex-grow: 4;
+}
+
+.post-content {
+	/* border: #448 2px solid; */
+	/* border-radius: 4px; */
+
+	margin: 0.1rem;
+	padding: 0.5rem 1rem;
+
+	word-break: break-all;
+}
+
+
+a {
+	color: #f7f;
+}
+a:hover {
+	color: #77f;
+}
+
+@media only screen and (max-width: 768px) {
+	.app {
+		grid-template-columns: 1fr;
+		grid-template-rows: min-content 1fr;
+	}
+
+	.sidebar {
+		grid-column: 1 / 2;
+		grid-row: 1 / 2;
+
+		overflow-y: scroll;
+		max-height: 20vh;
+	}
+	.content {
+		grid-column: 1 / 2;
+		grid-row: 2 / 3;
+
+		padding-left: 0rem;
+		padding-right: 0rem;
+	}
+}

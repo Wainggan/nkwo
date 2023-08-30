@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2>{{ user.name|e }}'s page</h2>
+{% if user.lastSeen %}<p>last seen: {{ user.lastSeen.strftime("%x") }} : {{ user.lastSeen.strftime("%X") }}</p>{% endif %}
+<p>
+	{{ user.description|e }}
+</p>
+
+<br>
+
+<div class="home">
+	{{ home.body|e }}
+</div>
+
+{% set formAction = url_for('box', id=home.id) %}
+{% include 'items/send.html' %}
+
+{% for post in home.children %}
+	{% include 'items/post.html' %}
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% if not formAction %}
+{% set formAction = "" %}
+{% endif %}
+
+<form action="{{ formAction }}" method="post" class="send">
+	{{ form.hidden_tag() }}
+
+	
+	{{ form.content(class_="send-body") }}
+
+	<div class="send-options">
+		{{ form.submit(class_="send-submit button") }}
+		{{ form.perms(class_="send-perms button") }}
+	</div>
+	
+</form>

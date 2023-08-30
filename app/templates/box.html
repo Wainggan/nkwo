@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+{% set showChildren = False %}
+{% include 'items/post.html' %}
+{% set showChildren = True %}
+
+
+{% if not current_user.is_anonymous %}
+
+	{% if post.can_edit(current_user) %}
+		edit
+	{% endif %}
+
+	{% include 'items/send.html' %}
+
+{% else %}
+	log in to comment
+{% endif %}
+
+{% for post in post.children %}
+	{% include 'items/post.html' %}
+{% endfor %}
+
+{% endblock %}

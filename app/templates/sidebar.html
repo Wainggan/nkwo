@@ -1,0 +1,16 @@
+<div class="sidebar">
+	<div class="sidebar-top">
+		<a href="{{ url_for('index') }}" class="button sidebar-button">home</a>
+		<!-- <a class="button sidebar-button">files</a> -->
+	</div>
+
+	<div class="sidebar-bottom">
+		{% if not current_user.is_anonymous %}
+			<a href="{{ url_for('user', id=current_user.id) }}" class="button sidebar-button">profile</a>
+			<a href="{{ url_for('settings') }}" class="button sidebar-button">settings</a>
+			<a href="{{ url_for('logout') }}" class="button sidebar-button">logout</a>
+		{% else %}
+			<a href="{{ url_for('login') }}" class="button sidebar-button">login</a>
+		{% endif %}
+	</div>
+</div>

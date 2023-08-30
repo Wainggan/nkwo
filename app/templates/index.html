@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+{% if not current_user.is_anonymous %}
+	
+<h2>welcome!</h2>
+
+{% include 'items/send.html' %}
+
+{% else %}
+<h2>welcome!</h2>
+{% endif %}
+
+<div class="posts">
+	{% for post in posts %}
+		{% include 'items/post.html' %}
+	{% endfor %}
+</div>
+
+
+{% endblock %}
