@@ -1,0 +1,8 @@
+flask
+flask_sqlalchemy
+flask_migrate
+flask_login
+werkzeug
+wtforms
+flask_wtf
+Flask-Markdown
