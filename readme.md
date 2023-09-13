@@ -29,6 +29,8 @@ flask db migrate
 flask db upgrade
 ```
 
+(make sure to run those last two commands after pulling)
+
 then finally run with
 
 ```bash
