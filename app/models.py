@@ -50,7 +50,8 @@ class Box (db.Model):
 	parent_id = db.Column(db.Integer, db.ForeignKey('box.id'))
 	children = db.relationship('Box')
 
-	default_perms = db.Column(db.Integer, default=Perms.post)
+	perms_default = db.Column(db.Integer, default=Perms.post)
+	perms_priority = db.Column(db.Boolean, default=True)
 
 	created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 	modified = db.Column(db.DateTime, default=datetime.utcnow)
