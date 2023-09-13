@@ -6,3 +6,4 @@ werkzeug
 wtforms
 flask_wtf
 Flask-Markdown
+email-validator
