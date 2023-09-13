@@ -13,6 +13,13 @@ class Perms (enum.IntEnum):
 	owner = 4
 	home = 5
 
+class PermsContain (enum.IntEnum):
+	default = 0
+	unset = 1
+	set = 2
+	unset_super = 3
+	set_super = 4
+
 class User (UserMixin, db.Model):
 	__tablename__ = 'user'
 
@@ -51,7 +58,7 @@ class Box (db.Model):
 	children = db.relationship('Box')
 
 	perms_default = db.Column(db.Integer, default=Perms.post)
-	perms_priority = db.Column(db.Boolean, default=True)
+	perms_contain = db.Column(db.Integer, default=PermsContain.default)
 
 	created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 	modified = db.Column(db.DateTime, default=datetime.utcnow)
