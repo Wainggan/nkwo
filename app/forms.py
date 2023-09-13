@@ -27,5 +27,8 @@ class SettingsForm (FlaskForm):
 
 class PostForm (FlaskForm):
 	content = TextAreaField('body', validators=[DataRequired(), Length(min=1, max=2048)])
-	perms = SelectField('permissions', default='post', choices=[('none', 'hidden'), ('view', 'show'), ('post', 'post')])
+	perms = SelectField('permissions', default='post', choices=[('none', 'hidden'), ('view', 'show'), ('post', 'post'), ('edit', 'edit')])
+	perms_contained = SelectField('contain perms', default='default', choices=[
+		('default', 'none'), ('set', 'set'), ('unset', 'unset'), ('edit', 'set_super'), ('unset', 'unset_super')
+	])
 	submit = SubmitField('post')
