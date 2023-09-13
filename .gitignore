@@ -4,4 +4,5 @@ app.db
 instance/*
 !instance/instanceconfigtemplate.py
 __pycache__
+migrations
 

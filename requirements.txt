@@ -1,6 +1,6 @@
 flask
 flask_sqlalchemy
-flask_migrate
+flask-migrate
 flask_login
 werkzeug
 wtforms
