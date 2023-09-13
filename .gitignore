@@ -1,4 +1,7 @@
 cert.pem
-config.py
 key.pem
 app.db
+instance/*
+!instance/instanceconfigtemplate.py
+_pycache_
+
