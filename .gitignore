@@ -3,5 +3,5 @@ key.pem
 app.db
 instance/*
 !instance/instanceconfigtemplate.py
-_pycache_
+__pycache__
 
