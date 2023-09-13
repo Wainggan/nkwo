@@ -14,7 +14,7 @@
 		<div class="post-heading-link"><a href="{{ url_for('box', id=post.id) }}">view</a></div>
 	</div>
 	<div class="post-content">
-		{{ post.body|e|markdown }}
+		{{ post.body |markdown }}
 	</div>
 
 	{% if showChildren %}
