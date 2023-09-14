@@ -237,8 +237,7 @@ def api_edit(id):
 		box.perms_default = Perms[form.perms_default.data]
 		box.perms_contain = PermsContain[form.perms_contained.data]
 
-		# todo: this doesn't work
-		# box.modified = datetime.utcnow
+		box.modified = datetime.utcnow
 
 		db.session.commit()
 
