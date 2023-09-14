@@ -101,8 +101,11 @@ class UserFollowBox (db.Model):
 	__tablename__ = 'user_follow_box'
 
 	id = db.Column(db.Integer, primary_key=True)
-	#user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-	#box_id = db.Column(db.Integer, db.ForeignKey('box.id'))
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	box_id = db.Column(db.Integer, db.ForeignKey('box.id'))
+
+	user = db.relationship('User', backref='follow_box')
+	box = db.relationship('Box', backref='followed')
 
 	def __repr__(self):
 		return f'<Follow {self.id}>'
