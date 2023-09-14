@@ -2,7 +2,7 @@
 from flask import render_template, request, flash, redirect
 from flask_login import login_required
 from app import app, login, db
-from app.models import User, Box, Permission, Perms
+from app.models import User, Box, Permission, Perms, PermsContain
 from flask_login import current_user, login_user, logout_user
 from werkzeug.urls import url_parse
 from datetime import datetime
@@ -109,6 +109,29 @@ def box(id):
 	
 	return render_template('box.html', post=box, form=form, api=app.url_for('api_post', id=id))
 
+@app.route('/box/<id>/edit', methods=['GET'])
+@login_required
+def box_edit(id):
+	box = Box.query.filter_by(id=int(id)).first_or_404()
+
+	from app.forms import PostForm
+	form = PostForm()
+
+	form.content.data = box.body
+	form.perms_default.data = Perms(box.perms_default).name
+	form.perms_contained.data = PermsContain(box.perms_contain).name
+	
+	return render_template('box_edit.html', post=box, form=form, api=app.url_for('api_edit', id=id))
+
+@app.route('/box/<id>/perms', methods=['GET'])
+def box_perms(id):
+	box = Box.query.filter_by(id=int(id)).first_or_404()
+
+	from app.forms import PostForm
+	form = PostForm()
+	
+	return render_template('box.html', post=box, form=form, api=app.url_for('api_post', id=id))
+
 @app.route('/user/<id>')
 def user(id):
 	user = User.query.filter_by(id=int(id)).first_or_404()
@@ -156,6 +179,31 @@ def api_post(id):
 
 		db.session.add(box)
 		db.session.add(perms)
+		db.session.commit()
+
+		flash("resounding success!")
+
+		return redirect(app.url_for('box', id=box.id))
+
+	return redirect(app.url_for('/'))
+
+@app.route('/api/edit/<id>', methods=['POST'])
+@login_required
+def api_edit(id):
+
+	from app.forms import PostForm
+	form = PostForm()
+
+	if form.validate_on_submit():
+		box = Box.query.filter_by(id=int(id)).first_or_404()
+
+		box.body = form.content.data
+		box.perms_default = Perms[form.perms_default.data]
+		box.perms_contain = PermsContain[form.perms_contained.data]
+
+		# todo: this doesn't work
+		# box.modified = datetime.utcnow
+
 		db.session.commit()
 
 		flash("resounding success!")

@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2>editing box</h2>
+
+{% set showChildren = False %}
+{% include 'items/post.html' %}
+{% set showChildren = True %}
+
+{% include 'items/send.html' %}
+
+{% endblock %}
