@@ -2,7 +2,7 @@
 - [x] move post logic to seperate endpoint
 - [x] edit post
 - [x] add special permissions
-- [ ] show line of parent posts
+- [x] show line of parent posts
 - [x] implement default permission propagation
 - [x] implement special permission propagation
 - [ ] permission validation
