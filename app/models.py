@@ -33,6 +33,8 @@ class User (UserMixin, db.Model):
 
 	password_hash = db.Column(db.String(128))
 
+	is_admin = db.Column(db.Boolean, default=False)
+
 	posts = db.relationship('Box')
 	
 	def set_password(self, new):
