@@ -144,9 +144,9 @@ body {
 	display: flex;
 	flex-direction: column;
 }
-.sidebar-button {
+/* .sidebar-button {
 
-}
+} */
 
 .button {
 	background: var(--button-background);
