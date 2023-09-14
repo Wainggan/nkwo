@@ -12,7 +12,7 @@ class LoginForm (FlaskForm):
 
 class SignupForm (FlaskForm):
 	email = StringField('email', validators=[DataRequired(), Email()])
-	name = StringField('name', validators=[DataRequired()])
+	name = StringField('name', validators=[DataRequired(), Length(2, 32)])
 	password = PasswordField('password', validators=[DataRequired()])
 	submit = SubmitField('signup')
 
@@ -26,7 +26,7 @@ class SettingsForm (FlaskForm):
 	submit = SubmitField('submit')
 
 class SpecialPermFormItem (FlaskForm):
-	userid = StringField('user id', validators=[DataRequired()])
+	userid = StringField('user id', validators=[DataRequired(), Length(2, 32)])
 	perms = SelectField('permissions', default='post', choices=[
 		('none', 'none'), ('view', 'view'), ('post', 'post'), ('edit', 'edit'), ('owner', 'owner')
 	])
