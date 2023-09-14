@@ -1,3 +1,11 @@
 
-- make markdown cute: `*table*` => \**table*\*
-- 
+- [ ] make markdown cute: `*table*` => \**table*\*
+- [ ] implement default permission propogation
+- [ ] implement special permission propogation
+- [ ] implement permission containment
+- [ ] user follow box
+- [ ] user follow user
+- [ ] main box
+- [ ] request box
+- [ ] user box
+- [ ] permission validation
