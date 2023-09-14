@@ -3,8 +3,9 @@
 - [x] edit post
 - [x] add special permissions
 - [ ] show line of parent posts
-- [ ] implement default permission propogation
-- [ ] implement special permission propogation
+- [x] implement default permission propagation
+- [x] implement special permission propagation
+- [ ] permission validation
 - [ ] implement permission containment
 - [ ] ability to change box parent
 - [ ] user follow box
@@ -12,6 +13,5 @@
 - [ ] main box
 - [ ] request box
 - [ ] user box
-- [ ] permission validation
 - [ ] custom markdown parser?
 	- [ ] make markdown cute: `*table*` => \**table*\*

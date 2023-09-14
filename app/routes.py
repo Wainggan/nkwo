@@ -110,6 +110,8 @@ def box(id):
 
 	from app.forms import PostForm
 	form = PostForm()
+
+	print(box.check_perm(current_user))
 	
 	return render_template('box.html', post=box, form=form, api=app.url_for('api_post', id=id))
 

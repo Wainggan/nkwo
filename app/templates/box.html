@@ -6,12 +6,15 @@
 
 {% if not current_user.is_anonymous %}
 
-	{% if post.can_edit(current_user) %}
+	{% if post.check(current_user, 'edit') %}
 		<a href="{{ url_for('box_edit', id=post.id) }}"><button class="button">edit</button></a>
 		<a href="{{ url_for('box_perms', id=post.id) }}"><button class="button">perms</button></a>
 	{% endif %}
 
-	{% include 'items/send.html' %}
+	{% if post.check(current_user, 'post') %}
+		{% include 'items/send.html' %}
+	{% endif %}
+	
 
 {% else %}
 	log in to comment

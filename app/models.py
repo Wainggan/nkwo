@@ -69,14 +69,34 @@ class Box (db.Model):
 	created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 	modified = db.Column(db.DateTime, default=datetime.utcnow)
 
-	def can_edit(self, user: User):
-		if not user.is_anonymous and Permission.query.filter(
+	def check(self, user: User, level: str):
+		return self.check_perm(user) >= Perms[level]
+	
+	def check_sPerm(self, user: User):
+		applies = None
+		if self.parent != None:
+			applies = self.parent.check_sPerm(user)
+			if applies != None: return applies
+		perm = Permission.query.filter(
 			Permission.user == user, 
-			Permission.box == self, 
-			Permission.level >= Perms.edit
-		).first() != None:
-			return True
-		return self.perms_default >= Perms.edit
+			Permission.box == self
+		).first()
+		if perm != None:
+			applies = perm
+		return applies
+	
+	def check_perm(self, user: User):
+		applies = Perms.view
+		if user.is_anonymous: return applies
+
+		applies = self.perms_default
+		perm = self.check_sPerm(user)
+		if perm != None:
+			applies = perm.level
+		
+		return applies
+
+
 
 	def __repr__(self):
 		return f'<Box {self.id}>'
