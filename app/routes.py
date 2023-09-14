@@ -1,5 +1,5 @@
 
-from flask import render_template, request, flash, redirect
+from flask import render_template, request, flash, redirect, abort
 from flask_login import login_required
 from app import app, login, db
 from app.models import User, Box, Permission, Perms, PermsContain
@@ -108,10 +108,11 @@ def logout():
 def box(id):
 	box = Box.query.filter_by(id=int(id)).first_or_404()
 
+	if box.check_perm(current_user) <= Perms.none:
+		abort(401)
+
 	from app.forms import PostForm
 	form = PostForm()
-
-	print(box.check_perm(current_user))
 	
 	return render_template('box.html', post=box, form=form, api=app.url_for('api_post', id=id))
 
@@ -191,6 +192,13 @@ def api_post(id):
 	form = PostForm()
 
 	if form.validate_on_submit():
+		box_parent = Box.query.filter_by(id=int(id)).first_or_404()
+		
+		if box_parent.check_perm(current_user) < Perms.post:
+			flash("invalid permissions - you may not post to here")
+			return redirect(app.url_for('box', id=box_parent.id))
+
+
 		box = Box(body=form.content.data, parent_id=id, perms_default=Perms[form.perms_default.data])
 
 		level = Perms.owner
@@ -217,6 +225,12 @@ def api_edit(id):
 	form = PostForm()
 
 	if form.validate_on_submit():
+		box_parent = Box.query.filter_by(id=int(id)).first_or_404()
+		
+		if box_parent.check_perm(current_user) < Perms.edit:
+			flash("invalid permissions - you may not edit this post")
+			return redirect(app.url_for('box', id=box_parent.id))
+
 		box = Box.query.filter_by(id=int(id)).first_or_404()
 
 		box.body = form.content.data
@@ -242,6 +256,12 @@ def api_perms(id):
 	form = SpecialPermForm()
 
 	if form.validate_on_submit():
+		box_parent = Box.query.filter_by(id=int(id)).first_or_404()
+		
+		if box_parent.check_perm(current_user) < Perms.owner:
+			flash("invalid permissions - you may not modify this post's permissions")
+			return redirect(app.url_for('box', id=box_parent.id))
+
 		box = Box.query.filter_by(id=int(id)).first_or_404()
 
 		for perm_item in form.perm_list.data:
@@ -271,6 +291,10 @@ def api_perms(id):
 @app.errorhandler(404)
 def not_found_error(error):
     return render_template('error/404.html'), 404
+
+@app.errorhandler(401)
+def not_found_error(error):
+    return render_template('error/404.html'), 401
 
 @app.errorhandler(500)
 def internal_error(error):

@@ -8,7 +8,7 @@
 	{% for i in range(10) if ns.parent != None %}
 	
 		{% set post = ns.parent %}
-		{% include 'items/post_base.html' %}
+		<!-- {% include 'items/post_base.html' %} -->
 	
 		{% set ns.parent = ns.parent.parent %}
 	

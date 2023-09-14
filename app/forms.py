@@ -16,6 +16,7 @@ class SignupForm (FlaskForm):
 	password = PasswordField('password', validators=[DataRequired()])
 	submit = SubmitField('signup')
 
+	# todo: doesn't seem to work
 	def validate_email(self, email):
 		user = User.query.filter_by(email=email.data).first()
 		if user != None:
