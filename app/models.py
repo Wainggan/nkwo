@@ -32,6 +32,8 @@ class User (UserMixin, db.Model):
 	lastSeen = db.Column(db.DateTime, default=datetime.utcnow)
 
 	password_hash = db.Column(db.String(128))
+
+	posts = db.relationship('Box')
 	
 	def set_password(self, new):
 		self.password_hash = generate_password_hash(new)
@@ -59,6 +61,8 @@ class Box (db.Model):
 
 	perms_default = db.Column(db.Integer, default=Perms.post)
 	perms_contain = db.Column(db.Integer, default=PermsContain.default)
+
+	user_creator = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 	created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 	modified = db.Column(db.DateTime, default=datetime.utcnow)
