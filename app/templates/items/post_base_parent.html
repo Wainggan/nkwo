@@ -1,5 +1,15 @@
 
-{% block parent %}{% endblock %}
+
+{% if post.parent != None %}
+
+{% block scope %}
+{% set post = post.parent %}
+{% include 'items/post_base_parent.html' %}
+{% endblock %}
+
+{% endif %}
+
+
 <div class="post">
 
 	<div class="post-heading">
@@ -16,7 +26,6 @@
 	<div class="post-content">
 		{{ post.body |markdown }}
 	</div>
-
-	{% block children %}{% endblock %}
 	
 </div>
+
