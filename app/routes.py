@@ -16,7 +16,11 @@ def index():
 	
 	boxes = Box.query.order_by(Box.created.desc()).all()
 
-	return render_template("index.html", form=form, posts=boxes, api=app.url_for('api_post', id=current_user.get_home().id))
+	id = 0
+	if not current_user.is_anonymous:
+		id = current_user.get_home().id
+
+	return render_template("index.html", form=form, posts=boxes, api=app.url_for('api_post', id=id))
 
 
 @app.route('/login', methods=['GET', 'POST'])

@@ -12,7 +12,7 @@ class LoginForm (FlaskForm):
 
 class SignupForm (FlaskForm):
 	email = StringField('email', validators=[DataRequired(), Email()])
-	name = StringField('name', validators=[DataRequired(), Length(2, 32)])
+	name = StringField('name', validators=[DataRequired(), Length(min=2, max=32)])
 	password = PasswordField('password', validators=[DataRequired()])
 	submit = SubmitField('signup')
 
@@ -22,11 +22,11 @@ class SignupForm (FlaskForm):
 			raise ValidationError("email already already in use")
 
 class SettingsForm (FlaskForm):
-	name = StringField('name', validators=[DataRequired()])
+	name = StringField('name', validators=[DataRequired(), Length(min=2, max=32)])
 	submit = SubmitField('submit')
 
 class SpecialPermFormItem (FlaskForm):
-	userid = StringField('user id', validators=[DataRequired(), Length(2, 32)])
+	userid = StringField('user id', validators=[DataRequired()])
 	perms = SelectField('permissions', default='post', choices=[
 		('none', 'none'), ('view', 'view'), ('post', 'post'), ('edit', 'edit'), ('owner', 'owner')
 	])
