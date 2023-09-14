@@ -227,8 +227,8 @@ body {
 	border-right: none;
 	border-radius: 4px;
 
-	padding: 0.5rem;
-	margin: 1rem 0.5rem;
+	padding: 0.5rem 0rem;
+	margin: 1.2rem 0rem;
 
 }
 
@@ -238,7 +238,7 @@ body {
 	justify-content: end;
 
 	gap: 0.5rem;
-	padding: 0.1rem 0.3rem;
+	padding: 0.1rem 1rem;
 }
 .post-heading-perms {
 	flex-grow: 4;
@@ -249,9 +249,13 @@ body {
 	/* border-radius: 4px; */
 
 	margin: 0.1rem;
-	padding: 0.5rem 1.1rem;
+	padding: 0.5rem 1.5rem;
 
 	word-break: break-all;
+}
+
+.post-posts {
+	margin-left: 1.5rem;
 }
 
 
