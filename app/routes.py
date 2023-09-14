@@ -76,7 +76,9 @@ def signup():
 	if request.method == "GET":
 		return render_template('signup.html', form=form)
 	if not form.validate_on_submit():
-		flash(f"invalid form")
+		for v in form.errors:
+			for i in form.errors[v]:
+				flash(f"{i}")
 		return render_template('signup.html', form=form)
 
 	user = User(name=form.name.data, email=form.email.data)
@@ -192,13 +194,14 @@ def api_post(id):
 	form = PostForm()
 
 	if form.validate_on_submit():
+		# validate permission
 		box_parent = Box.query.filter_by(id=int(id)).first_or_404()
 		
 		if box_parent.check_perm(current_user) < Perms.post:
 			flash("invalid permissions - you may not post to here")
 			return redirect(app.url_for('box', id=box_parent.id))
 
-
+		# create post
 		box = Box(body=form.content.data, parent_id=id, perms_default=Perms[form.perms_default.data])
 
 		level = Perms.owner
@@ -225,12 +228,14 @@ def api_edit(id):
 	form = PostForm()
 
 	if form.validate_on_submit():
+		# validate permissions
 		box_parent = Box.query.filter_by(id=int(id)).first_or_404()
 		
 		if box_parent.check_perm(current_user) < Perms.edit:
 			flash("invalid permissions - you may not edit this post")
 			return redirect(app.url_for('box', id=box_parent.id))
 
+		# edit post
 		box = Box.query.filter_by(id=int(id)).first_or_404()
 
 		box.body = form.content.data
@@ -255,11 +260,14 @@ def api_perms(id):
 	form = SpecialPermForm()
 
 	if form.validate_on_submit():
+		# validate permissions
 		box_parent = Box.query.filter_by(id=int(id)).first_or_404()
 		
 		if box_parent.check_perm(current_user) < Perms.owner:
 			flash("invalid permissions - you may not modify this post's permissions")
 			return redirect(app.url_for('box', id=box_parent.id))
+		
+		# update special permissions
 
 		box = Box.query.filter_by(id=int(id)).first_or_404()
 

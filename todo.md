@@ -5,11 +5,17 @@
 - [x] show line of parent posts
 - [x] implement default permission propagation
 - [x] implement special permission propagation
+- [ ] ability to remove special permissions
 - [ ] permission validation
 - [ ] implement permission containment
-- [ ] ability to change box parent
 - [ ] user follow box
 - [ ] user follow user
+- [ ] inbox
+	- [ ] notifications
+	- [ ] dms
+	- [ ] requests
+	- [ ] accept / deny requests
+- [ ] ability to change box parent
 - [ ] main box
 - [ ] request box
 - [ ] user box
