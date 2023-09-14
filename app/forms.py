@@ -34,7 +34,7 @@ class SpecialPermFormItem (FlaskForm):
 	remove = SubmitField('-')
 
 	def validate_id(self, id):
-		user = User.query.filter_by(id=id.data).first()
+		user = User.query.filter_by(id=int(id.data)).first()
 		if user == None:
 			raise ValidationError(f"user {id} does not exist")
 
