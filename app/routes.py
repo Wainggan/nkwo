@@ -1,11 +1,15 @@
 
 from flask import render_template, request, flash, redirect, abort
 from flask_login import login_required
+from flask_login import current_user, login_user, logout_user
+
 from app import app, login, db
 from app.models import User, Box, Permission, Perms, PermsContain
-from flask_login import current_user, login_user, logout_user
+
 from werkzeug.urls import url_parse
 from datetime import datetime
+
+import app.app_text as app_text
 
 
 @app.route('/', methods=['GET'])
@@ -57,7 +61,7 @@ def login():
 	login_user(user, remember=form.remember.data)
 
 	print(f"attempting login: {email}")
-	flash(f"successfully logged in")
+	flash(app_text.success_login)
 
 	next_page = request.args.get('next')
 	if not next_page or url_parse(next_page).netloc != '':
@@ -84,7 +88,7 @@ def signup():
 	user = User(name=form.name.data, email=form.email.data)
 	user.set_password(form.password.data)
 
-	home_box = Box(body=f"i'm new here! hi!", perms_default=Perms.view)
+	home_box = Box(body=app_text.default_homebody, perms_default=Perms.view)
 	db.session.add(home_box)
 	db.session.add(user)
 
@@ -92,7 +96,7 @@ def signup():
 	db.session.add(perms)
 	db.session.commit()
 
-	flash('resounding success!!')
+	flash(app_text.success_register)
 	return redirect(app.url_for('login'))
 
 @app.before_request
@@ -178,7 +182,7 @@ def settings():
 	if form.validate_on_submit():
 		current_user.name = form.name.data
 		db.session.commit()
-		flash('Your changes have been saved.')
+		flash(app_text.success)
 		return redirect(app.url_for('settings'))
 	elif request.method == 'GET':
 		form.name.data = current_user.name
@@ -198,7 +202,7 @@ def api_post(id):
 		box_parent = Box.query.filter_by(id=int(id)).first_or_404()
 		
 		if box_parent.check_perm(current_user) < Perms.post:
-			flash("invalid permissions - you may not post to here")
+			flash(app_text.error_post_invalidperm)
 			return redirect(app.url_for('box', id=box_parent.id))
 
 		# create post
@@ -214,7 +218,7 @@ def api_post(id):
 		db.session.add(perms)
 		db.session.commit()
 
-		flash("resounding success!")
+		flash(app_text.success)
 
 		return redirect(app.url_for('box', id=box.id))
 
@@ -232,7 +236,7 @@ def api_edit(id):
 		box_parent = Box.query.filter_by(id=int(id)).first_or_404()
 		
 		if box_parent.check_perm(current_user) < Perms.edit:
-			flash("invalid permissions - you may not edit this post")
+			flash(app_text.error_edit_invalidperm)
 			return redirect(app.url_for('box', id=box_parent.id))
 
 		# edit post
@@ -246,7 +250,7 @@ def api_edit(id):
 
 		db.session.commit()
 
-		flash("resounding success!")
+		flash(app_text.success)
 
 		return redirect(app.url_for('box', id=box.id))
 
@@ -264,7 +268,7 @@ def api_perms(id):
 		box_parent = Box.query.filter_by(id=int(id)).first_or_404()
 		
 		if box_parent.check_perm(current_user) < Perms.owner:
-			flash("invalid permissions - you may not modify this post's permissions")
+			flash(app_text.error_editperm_invalidperm)
 			return redirect(app.url_for('box', id=box_parent.id))
 		
 		# update special permissions
@@ -288,7 +292,7 @@ def api_perms(id):
 
 		db.session.commit()
 
-		flash("resounding success!")
+		flash(app_text.success)
 
 		return redirect(app.url_for('box', id=box.id))
 
