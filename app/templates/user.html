@@ -10,8 +10,8 @@
 
 <br>
 
-<div class="home">
-	{{ home.body|e }}
+<div class="home" style="margin-bottom: 2rem;">
+	{{ home.body|markdown }}
 </div>
 
 {% include 'items/send.html' %}

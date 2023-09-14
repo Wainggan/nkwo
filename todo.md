@@ -1,7 +1,7 @@
 
 - [x] move post logic to seperate endpoint
 - [x] edit post
-- [ ] add special permissions
+- [x] add special permissions
 - [ ] make markdown cute: `*table*` => \**table*\*
 - [ ] implement default permission propogation
 - [ ] implement special permission propogation
