@@ -59,7 +59,7 @@ class Box (db.Model):
 
 	body = db.Column(db.String(2048))
 	parent_id = db.Column(db.Integer, db.ForeignKey('box.id'))
-	children = db.relationship('Box')
+	children = db.relationship('Box', foreign_keys=parent_id, backref=db.backref("parent", remote_side=id))
 
 	perms_default = db.Column(db.Integer, default=Perms.post)
 	perms_contain = db.Column(db.Integer, default=PermsContain.default)
@@ -69,8 +69,8 @@ class Box (db.Model):
 	created = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 	modified = db.Column(db.DateTime, default=datetime.utcnow)
 
-	def can_edit(self, user):
-		if Permission.query.filter(
+	def can_edit(self, user: User):
+		if not user.is_anonymous and Permission.query.filter(
 			Permission.user == user, 
 			Permission.box == self, 
 			Permission.level >= Perms.edit

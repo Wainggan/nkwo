@@ -1,0 +1,20 @@
+{% extends "items/post_base.html" %}
+
+{% block parent %}
+
+<div class="post-parent">
+
+	{% set ns = namespace(parent=post) %}
+	{% for i in range(10) if ns.parent != None %}
+	
+		{% set post = ns.parent %}
+		{% include 'items/post_base.html' %}
+	
+		{% set ns.parent = ns.parent.parent %}
+	
+	{% endfor %}
+
+</div>
+
+{% endblock %}
+

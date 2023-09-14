@@ -4,15 +4,15 @@
 
 <h2>{{ user.name|e }}'s page</h2>
 {% if user.lastSeen %}<p>last seen: {{ user.lastSeen.strftime("%x") }} : {{ user.lastSeen.strftime("%X") }}</p>{% endif %}
-<p>
-	{{ user.description|e }}
-</p>
 
 <br>
 
 <div class="home" style="margin-bottom: 2rem;">
 	{{ home.body|markdown }}
 </div>
+
+<a href="{{ url_for('box', id=home.id) }}">view</a>
+
 
 {% include 'items/send.html' %}
 

@@ -2,10 +2,7 @@
 
 {% block content %}
 
-{% set showChildren = False %}
-{% include 'items/post.html' %}
-{% set showChildren = True %}
-
+{% include 'items/post_parent.html' %}
 
 {% if not current_user.is_anonymous %}
 

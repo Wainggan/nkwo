@@ -1,0 +1,22 @@
+<div class="post">
+
+	{% block parent %}{% endblock %}
+
+	<div class="post-heading">
+		<div class="post-heading-perms">
+			{% for perm in post.perms %}
+				&lt;<a href="{{ url_for('user', id=perm.user.id) }}">{{ perm.user.name|e }}</a> ({{ perm.get_perm() }})&gt;
+			{% endfor %}
+		</div>
+
+		<div class="post-heading-time">{{ post.created.strftime("%x") }} : {{ post.created.strftime("%X") }}</div>
+		
+		<div class="post-heading-link"><a href="{{ url_for('box', id=post.id) }}">view</a></div>
+	</div>
+	<div class="post-content">
+		{{ post.body |markdown }}
+	</div>
+
+	{% block children %}{% endblock %}
+	
+</div>
