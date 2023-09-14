@@ -1,4 +1,5 @@
 
+- [ ] move post logic to seperate endpoint
 - [ ] make markdown cute: `*table*` => \**table*\*
 - [ ] implement default permission propogation
 - [ ] implement special permission propogation

@@ -15,7 +15,7 @@ def index():
 	form = PostForm()
 
 	if form.validate_on_submit():
-		box = Box(body=form.content.data, parent_id=current_user.get_home().id, perms_default=Perms[form.perms.data])
+		box = Box(body=form.content.data, parent_id=current_user.get_home().id, perms_default=Perms[form.perms_default.data])
 
 		perms = Permission(user=current_user, box=box, level=Perms.owner)
 
@@ -121,7 +121,7 @@ def box(id):
 	form = PostForm()
 
 	if form.validate_on_submit():
-		childbox = Box(body=form.content.data, parent_id=box.id, perms_default=Perms[form.perms.data])
+		childbox = Box(body=form.content.data, parent_id=box.id, perms_default=Perms[form.perms_default.data])
 
 		level = Perms.edit
 		if any(p.user == current_user and p.level >= Perms.owner for p in box.perms):
@@ -167,6 +167,11 @@ def settings():
 
 	return render_template('settings.html', form=form)
 
+
+@app.route('/api/post/<id>')
+@login_required
+def api_post(id):
+	pass
 
 
 @app.errorhandler(404)

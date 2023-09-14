@@ -1,6 +1,6 @@
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, SelectField, FieldList, FormField
 from wtforms.validators import DataRequired, Email, ValidationError, Length
 from app.models import User
 
@@ -25,10 +25,20 @@ class SettingsForm (FlaskForm):
 	name = StringField('name', validators=[DataRequired()])
 	submit = SubmitField('submit')
 
+class SpecialPermForm (FlaskForm):
+	id = StringField('user id', validators=[DataRequired()])
+	perms = SelectField('permissions', default='post', choices=[('none', 'hidden'), ('view', 'show'), ('post', 'post'), ('edit', 'edit')])
+
+	def validate_id(self, id):
+		user = User.query.filter_by(id=id.data).first()
+		if user == None:
+			raise ValidationError(f"user {id} does not exist")
+
 class PostForm (FlaskForm):
 	content = TextAreaField('body', validators=[DataRequired(), Length(min=1, max=2048)])
-	perms = SelectField('permissions', default='post', choices=[('none', 'hidden'), ('view', 'show'), ('post', 'post'), ('edit', 'edit')])
+	perms_default = SelectField('permissions', default='post', choices=[('none', 'hidden'), ('view', 'show'), ('post', 'post'), ('edit', 'edit')])
 	perms_contained = SelectField('contain perms', default='default', choices=[
 		('default', 'none'), ('set', 'set'), ('unset', 'unset'), ('edit', 'set_super'), ('unset', 'unset_super')
 	])
+	perms_special = FieldList(FormField(SpecialPermForm))
 	submit = SubmitField('post')
