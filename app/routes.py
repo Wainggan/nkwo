@@ -123,14 +123,30 @@ def box_edit(id):
 	
 	return render_template('box_edit.html', post=box, form=form, api=app.url_for('api_edit', id=id))
 
-@app.route('/box/<id>/perms', methods=['GET'])
+@app.route('/box/<id>/perms', methods=['GET', 'POST'])
+@login_required
 def box_perms(id):
 	box = Box.query.filter_by(id=int(id)).first_or_404()
 
-	from app.forms import PostForm
-	form = PostForm()
+	from app.forms import SpecialPermForm
+	form = SpecialPermForm()
+
+	if form.add.data:
+		form.perm_list.append_entry(None)
+	elif form.validate_on_submit():
+		# redirect, preserve POST
+		return redirect(app.url_for('api_perms', id=id), code=307)
 	
-	return render_template('box.html', post=box, form=form, api=app.url_for('api_post', id=id))
+	perms = Permission.query.filter_by(box_id=box.id).all()
+
+	for i in range(len(perms)):
+		if len(form.perm_list) <= i:
+			form.perm_list.append_entry(None)
+
+		form.perm_list[i].userid.data = perms[i].user_id
+		form.perm_list[i].perms.data = Perms(perms[i].level).name
+
+	return render_template('box_perms.html', post=box, form=form, api=app.url_for('box_perms', id=id))
 
 @app.route('/user/<id>')
 def user(id):
@@ -203,6 +219,39 @@ def api_edit(id):
 
 		# todo: this doesn't work
 		# box.modified = datetime.utcnow
+
+		db.session.commit()
+
+		flash("resounding success!")
+
+		return redirect(app.url_for('box', id=box.id))
+
+	return redirect(app.url_for('/'))
+
+@app.route('/api/perms/<id>', methods=['POST'])
+@login_required
+def api_perms(id):
+
+	from app.forms import SpecialPermForm
+	form = SpecialPermForm()
+
+	if form.validate_on_submit():
+		box = Box.query.filter_by(id=int(id)).first_or_404()
+
+		for perm_item in form.perm_list.data:
+			user = User.query.filter_by(id=int(perm_item['userid'])).first()
+			if user == None: continue
+
+			level = Perms[perm_item['perms']]
+
+			perm = Permission.query.filter_by(user_id=user.id, box_id=box.id).first()
+			if perm == None:
+				perm = Permission(user_id=user.id, box_id=box.id, level=level)
+				db.session.add(perm)
+				continue
+
+			perm.level = level
+
 
 		db.session.commit()
 

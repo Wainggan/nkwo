@@ -27,18 +27,30 @@ class SettingsForm (FlaskForm):
 
 class SpecialPermFormItem (FlaskForm):
 	userid = StringField('user id', validators=[DataRequired()])
-	perms = SelectField('permissions', default='post', choices=[('none', 'hidden'), ('view', 'show'), ('post', 'post'), ('edit', 'edit')])
+	perms = SelectField('permissions', default='post', choices=[
+		('none', 'none'), ('view', 'view'), ('post', 'post'), ('edit', 'edit'), ('owner', 'owner')
+	])
 
-	# perms_special = FieldList(FormField(SpecialPermForm))
+	remove = SubmitField('-')
 
 	def validate_id(self, id):
 		user = User.query.filter_by(id=id.data).first()
 		if user == None:
 			raise ValidationError(f"user {id} does not exist")
 
+class SpecialPermForm (FlaskForm):
+	add = SubmitField('+')
+	perm_list = FieldList(FormField(SpecialPermFormItem))
+
+	submit = SubmitField('send')
+
+	
+
 class PostForm (FlaskForm):
 	content = TextAreaField('body', validators=[DataRequired(), Length(min=1, max=2048)])
-	perms_default = SelectField('permissions', default='post', choices=[('none', 'none'), ('view', 'view'), ('post', 'post'), ('edit', 'edit')])
+	perms_default = SelectField('permissions', default='post', choices=[
+		('none', 'none'), ('view', 'view'), ('post', 'post'), ('edit', 'edit'), ('owner', 'owner')
+	])
 	perms_contained = SelectField('contain perms', default='default', choices=[
 		('default', 'none'), ('set', 'set'), ('unset', 'unset'), ('set_super', 'set_super'), ('unset_super', 'unset_super')
 	])

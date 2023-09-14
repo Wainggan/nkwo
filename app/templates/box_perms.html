@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2>editing box perms</h2>
+
+{% set showChildren = False %}
+{% include 'items/post.html' %}
+{% set showChildren = True %}
+
+
+<form action="{{ api or "" }}" method="post" class="">
+
+	{{ form.hidden_tag() }}
+
+	{{ form.add(class_="button") }}
+	{% for perm in form.perm_list %}
+		<p>
+		{{ perm.hidden_tag() }}
+		{{ perm.userid() }}
+		{{ perm.perms(class_="send-perms button") }}
+		</p>
+	{% endfor %}
+
+	{{ form.submit(class_="send-submit button") }}
+
+</form>
+
+
+
+
+{% endblock %}

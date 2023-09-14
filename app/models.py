@@ -76,7 +76,7 @@ class Box (db.Model):
 			Permission.level >= Perms.edit
 		).first() != None:
 			return True
-		return self.default_perms >= Perms.edit
+		return self.perms_default >= Perms.edit
 
 	def __repr__(self):
 		return f'<Box {self.id}>'
