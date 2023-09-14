@@ -2,13 +2,16 @@
 - [x] move post logic to seperate endpoint
 - [x] edit post
 - [x] add special permissions
-- [ ] make markdown cute: `*table*` => \**table*\*
+- [ ] show line of parent posts
 - [ ] implement default permission propogation
 - [ ] implement special permission propogation
 - [ ] implement permission containment
+- [ ] ability to change box parent
 - [ ] user follow box
 - [ ] user follow user
 - [ ] main box
 - [ ] request box
 - [ ] user box
 - [ ] permission validation
+- [ ] custom markdown parser?
+	- [ ] make markdown cute: `*table*` => \**table*\*
