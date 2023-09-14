@@ -262,6 +262,18 @@ body {
 	margin-left: 1.5rem;
 }
 
+.post.parent {
+	margin: 0;
+	border-bottom: none;
+}
+
+.post-parent {
+	padding-left: 2rem;
+	padding-top: 2rem;
+
+	border-bottom: var(--text-link-hover) 2px solid;
+}
+
 
 a {
 	color: var(--text-link);
