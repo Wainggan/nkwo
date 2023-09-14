@@ -25,9 +25,11 @@ class SettingsForm (FlaskForm):
 	name = StringField('name', validators=[DataRequired()])
 	submit = SubmitField('submit')
 
-class SpecialPermForm (FlaskForm):
-	id = StringField('user id', validators=[DataRequired()])
+class SpecialPermFormItem (FlaskForm):
+	userid = StringField('user id', validators=[DataRequired()])
 	perms = SelectField('permissions', default='post', choices=[('none', 'hidden'), ('view', 'show'), ('post', 'post'), ('edit', 'edit')])
+
+	# perms_special = FieldList(FormField(SpecialPermForm))
 
 	def validate_id(self, id):
 		user = User.query.filter_by(id=id.data).first()
@@ -36,9 +38,9 @@ class SpecialPermForm (FlaskForm):
 
 class PostForm (FlaskForm):
 	content = TextAreaField('body', validators=[DataRequired(), Length(min=1, max=2048)])
-	perms_default = SelectField('permissions', default='post', choices=[('none', 'hidden'), ('view', 'show'), ('post', 'post'), ('edit', 'edit')])
+	perms_default = SelectField('permissions', default='post', choices=[('none', 'none'), ('view', 'view'), ('post', 'post'), ('edit', 'edit')])
 	perms_contained = SelectField('contain perms', default='default', choices=[
 		('default', 'none'), ('set', 'set'), ('unset', 'unset'), ('edit', 'set_super'), ('unset', 'unset_super')
 	])
-	perms_special = FieldList(FormField(SpecialPermForm))
-	submit = SubmitField('post')
+	
+	submit = SubmitField('send')

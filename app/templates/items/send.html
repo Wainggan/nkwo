@@ -1,16 +1,11 @@
-{% if not formAction %}
-{% set formAction = "" %}
-{% endif %}
-
-<form action="{{ formAction }}" method="post" class="send">
+<form action="{{ api or "" }}" method="post" class="send">
 	{{ form.hidden_tag() }}
 
-	
 	{{ form.content(class_="send-body") }}
 
 	<div class="send-options">
 		{{ form.submit(class_="send-submit button") }}
-		{{ form.perms(class_="send-perms button") }}
+		{{ form.perms_default(class_="send-perms button") }}
 		{{ form.perms_contained(class_="send-perms button") }}
 	</div>
 	

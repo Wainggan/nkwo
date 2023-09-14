@@ -14,7 +14,6 @@
 	{{ home.body|e }}
 </div>
 
-{% set formAction = url_for('box', id=home.id) %}
 {% include 'items/send.html' %}
 
 {% for post in home.children %}

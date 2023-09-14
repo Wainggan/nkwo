@@ -8,28 +8,15 @@ from werkzeug.urls import url_parse
 from datetime import datetime
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def index():
 
 	from app.forms import PostForm
 	form = PostForm()
-
-	if form.validate_on_submit():
-		box = Box(body=form.content.data, parent_id=current_user.get_home().id, perms_default=Perms[form.perms_default.data])
-
-		perms = Permission(user=current_user, box=box, level=Perms.owner)
-
-		db.session.add(box)
-		db.session.add(perms)
-		db.session.commit()
-
-		flash("resounding success!")
-
-		return redirect(app.url_for('box', id=box.id))
 	
 	boxes = Box.query.order_by(Box.created.desc()).all()
 
-	return render_template("index.html", form=form, posts=boxes)
+	return render_template("index.html", form=form, posts=boxes, api=app.url_for('api_post', id=current_user.get_home().id))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -91,7 +78,7 @@ def signup():
 	user = User(name=form.name.data, email=form.email.data)
 	user.set_password(form.password.data)
 
-	home_box = Box(body=f"i'm new here! hi!", default_perms=Perms.view)
+	home_box = Box(body=f"i'm new here! hi!", perms_default=Perms.view)
 	db.session.add(home_box)
 	db.session.add(user)
 
@@ -113,31 +100,14 @@ def logout():
 	logout_user()
 	return redirect('/')
 
-@app.route('/box/<id>', methods=['GET', 'POST'])
+@app.route('/box/<id>', methods=['GET'])
 def box(id):
 	box = Box.query.filter_by(id=int(id)).first_or_404()
 
 	from app.forms import PostForm
 	form = PostForm()
-
-	if form.validate_on_submit():
-		childbox = Box(body=form.content.data, parent_id=box.id, perms_default=Perms[form.perms_default.data])
-
-		level = Perms.edit
-		if any(p.user == current_user and p.level >= Perms.owner for p in box.perms):
-			level = Perms.owner
-
-		perms = Permission(user=current_user, box=childbox, level=level)
-
-		db.session.add(childbox)
-		db.session.add(perms)
-		db.session.commit()
-
-		flash("resounding success!")
-
-		return redirect(request.url)
 	
-	return render_template('box.html', post=box, form=form)
+	return render_template('box.html', post=box, form=form, api=app.url_for('api_post', id=id))
 
 @app.route('/user/<id>')
 def user(id):
@@ -148,7 +118,7 @@ def user(id):
 	from app.forms import PostForm
 	form = PostForm()
 	
-	return render_template('user.html', user=user, home=home, form=form)
+	return render_template('user.html', user=user, form=form, home=home, api=app.url_for('api_post', id=home.id))
 
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required
@@ -168,10 +138,31 @@ def settings():
 	return render_template('settings.html', form=form)
 
 
-@app.route('/api/post/<id>')
+@app.route('/api/post/<id>', methods=['POST'])
 @login_required
 def api_post(id):
-	pass
+
+	from app.forms import PostForm
+	form = PostForm()
+
+	if form.validate_on_submit():
+		box = Box(body=form.content.data, parent_id=id, perms_default=Perms[form.perms_default.data])
+
+		level = Perms.owner
+		# if any(p.user == current_user and p.level >= Perms.owner for p in box.perms):
+		#	level = Perms.owner
+
+		perms = Permission(user=current_user, box=box, level=level)
+
+		db.session.add(box)
+		db.session.add(perms)
+		db.session.commit()
+
+		flash("resounding success!")
+
+		return redirect(app.url_for('box', id=box.id))
+
+	return redirect(app.url_for('/'))
 
 
 @app.errorhandler(404)
