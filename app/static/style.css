@@ -271,7 +271,8 @@ body {
 	padding-left: 2rem;
 	padding-top: 2rem;
 
-	border-bottom: var(--text-link-hover) 2px solid;
+	/* border-bottom: var(--text-link-hover) 2px solid; */
+	margin-bottom: -1.2rem;
 }
 
 

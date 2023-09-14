@@ -8,6 +8,8 @@
 
 	{% if post.check(current_user, 'edit') %}
 		<a href="{{ url_for('box_edit', id=post.id) }}"><button class="button">edit</button></a>
+	{% endif %}
+	{% if post.check(current_user, 'owner') %}
 		<a href="{{ url_for('box_perms', id=post.id) }}"><button class="button">perms</button></a>
 	{% endif %}
 
