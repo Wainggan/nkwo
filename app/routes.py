@@ -10,6 +10,7 @@ from werkzeug.urls import url_parse
 from datetime import datetime
 
 import app.app_text as app_text
+import app.utils as utils
 
 
 @app.route('/', methods=['GET'])
