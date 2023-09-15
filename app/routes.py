@@ -163,14 +163,14 @@ def box_perms(id):
 
 @app.route('/user/<id>')
 def user(id):
-	user = User.query.filter_by(id=int(id)).first_or_404()
+	user: User = User.query.filter_by(id=int(id)).first_or_404()
 
-	home = user.get_home()
+	posts = Box.query.filter_by(user_creator=user.id).all()
 
 	from app.forms import PostForm
 	form = PostForm()
 	
-	return render_template('user.html', user=user, form=form, home=home, api=app.url_for('api_post', id=home.id))
+	return render_template('user.html', user=user, form=form, posts=posts, api=app.url_for('api_post', id=user.get_home().id))
 
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required
@@ -207,6 +207,8 @@ def api_post(id):
 
 		# create post
 		box = Box(body=form.content.data, parent_id=id, perms_default=Perms[form.perms_default.data])
+
+		box.user_creator = current_user.id
 
 		level = Perms.owner
 		# if any(p.user == current_user and p.level >= Perms.owner for p in box.perms):
