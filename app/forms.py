@@ -27,14 +27,16 @@ class SettingsForm (FlaskForm):
 	submit = SubmitField('submit')
 
 class SpecialPermFormItem (FlaskForm):
-	userid = StringField('user id', validators=[DataRequired()])
+	userid = StringField('user id')
 	perms = SelectField('permissions', default='post', choices=[
 		('none', 'none'), ('view', 'view'), ('post', 'post'), ('edit', 'edit'), ('owner', 'owner')
 	])
 
 	remove = SubmitField('-')
 
-	def validate_id(self, id):
+	def validate_userid(self, id):
+		if id.data == '':
+			raise ValidationError(f"empty user")
 		user = User.query.filter_by(id=int(id.data)).first()
 		if user == None:
 			raise ValidationError(f"user {id} does not exist")

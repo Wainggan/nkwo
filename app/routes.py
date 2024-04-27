@@ -145,15 +145,16 @@ def box_perms(id):
 	from app.forms import SpecialPermForm
 	form = SpecialPermForm()
 
-	if form.add.data:
-		form.perm_list.append_entry(None)
-	elif form.validate_on_submit():
+	if form.validate_on_submit():
 		# redirect, preserve POST
 		return redirect(app.url_for('api_perms', id=id), code=307)
 	
 	perms = Permission.query.filter_by(box_id=box.id).all()
 
 	for i in range(len(perms)):
+		if perms[i].level == Perms.home:
+			continue
+
 		if len(form.perm_list) <= i:
 			form.perm_list.append_entry(None)
 
@@ -236,15 +237,13 @@ def api_edit(id):
 
 	if form.validate_on_submit():
 		# validate permissions
-		box_parent = Box.query.filter_by(id=int(id)).first_or_404()
+		box = Box.query.filter_by(id=int(id)).first_or_404()
 		
-		if box_parent.check_perm(current_user) < Perms.edit:
+		if box.check_perm(current_user) < Perms.edit:
 			flash(app_text.error_edit_invalidperm)
-			return redirect(app.url_for('box', id=box_parent.id))
+			return redirect(app.url_for('box', id=box.id))
 
 		# edit post
-		box = Box.query.filter_by(id=int(id)).first_or_404()
-
 		box.body = form.content.data
 		box.perms_default = Perms[form.perms_default.data]
 		box.perms_contain = PermsContain[form.perms_contained.data]
@@ -268,19 +267,21 @@ def api_perms(id):
 
 	if form.validate_on_submit():
 		# validate permissions
-		box_parent = Box.query.filter_by(id=int(id)).first_or_404()
+		box = Box.query.filter_by(id=int(id)).first_or_404()
 		
-		if box_parent.check_perm(current_user) < Perms.owner:
+		if box.check_perm(current_user) < Perms.owner:
 			flash(app_text.error_editperm_invalidperm)
-			return redirect(app.url_for('box', id=box_parent.id))
+			return redirect(app.url_for('box', id=box.id))
+		
+		exists = []
 		
 		# update special permissions
-
-		box = Box.query.filter_by(id=int(id)).first_or_404()
-
 		for perm_item in form.perm_list.data:
+
 			user = User.query.filter_by(id=int(perm_item['userid'])).first()
 			if user == None: continue
+
+			exists.append(user.id)
 
 			level = Perms[perm_item['perms']]
 
@@ -290,8 +291,17 @@ def api_perms(id):
 				db.session.add(perm)
 				continue
 
+			# don't remove home permission
+			if perm.level == Perms.home:
+				continue
+
 			perm.level = level
 
+		# remove permissions
+		perms = Permission.query.filter_by(box_id=box.id).filter(Permission.level < Perms.home).all()
+		for perm in perms:
+			if not perm.user_id in exists:
+				db.session.delete(perm)
 
 		db.session.commit()
 
@@ -299,7 +309,7 @@ def api_perms(id):
 
 		return redirect(app.url_for('box', id=box.id))
 
-	return redirect(app.url_for('/'))
+	return redirect(app.url_for('index'))
 
 
 @app.errorhandler(404)
@@ -314,3 +324,5 @@ def not_found_error(error):
 def internal_error(error):
     db.session.rollback()
     return render_template('error/500.html'), 500
+
+

@@ -4,29 +4,29 @@
 
 <h2>editing box perms</h2>
 
-{% set showChildren = False %}
-{% include 'items/post.html' %}
-{% set showChildren = True %}
+{% include 'items/post_base.html' %}
 
 
-<form action="{{ api or "" }}" method="post" class="">
+<form action="{{ api or "" }}" method="post" class="" id="form">
 
 	{{ form.hidden_tag() }}
 
-	{{ form.add(class_="button") }}
+	<a id="form-add"><button type="button" class="button">+</button></a>
+	<div id="form-list">
 	{% for perm in form.perm_list %}
 		<p>
 		{{ perm.hidden_tag() }}
 		{{ perm.userid() }}
 		{{ perm.perms(class_="send-perms button") }}
+		<a id="form-remove-{{ loop.index0 }}"><button type="button" class="button form-remove">-</button></a>
 		</p>
 	{% endfor %}
+	</div>
 
 	{{ form.submit(class_="send-submit button") }}
 
 </form>
 
-
-
+<script src="{{ url_for('static', filename='box_perms.js') }}"></script>
 
 {% endblock %}

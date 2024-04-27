@@ -7,6 +7,8 @@
 - [x] implement special permission propagation
 - [ ] ability to remove special permissions
 - [ ] permission validation
+- [ ] pagination
+- [ ] hide hidden posts from timelines
 - [ ] implement permission containment
 - [ ] user follow box
 - [ ] user follow user
